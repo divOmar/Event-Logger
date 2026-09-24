@@ -1,9 +1,9 @@
 
 import app from "./app";
-import "dotenv/config"
+import { config } from "./config/env";
 
 
-const PORT = process.env.PORT
+const PORT = config.port
 
 
 app.listen(PORT,()=>{
