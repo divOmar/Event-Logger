@@ -11,4 +11,7 @@ export class InMemoryEventRepository  implements EventRepositery{
     async save(event: Event): Promise<void> {
         this.events.push(event)
     }
+    async findAll():Promise<Event[]>{
+        return this.events
+    }
 }
