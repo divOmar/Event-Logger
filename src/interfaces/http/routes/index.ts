@@ -3,11 +3,12 @@ import { InMemoryEventRepository } from "../../../infrastructure/events/in-memor
 import { CreateEvent } from "../../../Application/events/create-event";
 import { EventController } from "../controllers/event.controller";
 import { createEventRoutes } from "./event.routes";
+import { EventMongoRepositery } from "../../../infrastructure/events/mongo-event.repository";
 
 const router=Router()
 
 
-const eventRepositry= new InMemoryEventRepository()
+const eventRepositry= new EventMongoRepositery()
 const createEvent = new CreateEvent(eventRepositry)
 const eventController = new EventController(createEvent)
 
