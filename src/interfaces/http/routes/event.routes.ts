@@ -18,5 +18,10 @@ export const createEventRoutes =(eventController:EventController)=>{
         validateDto(createEventDto),
         eventController.create.bind(eventController)
     )
+
+
+    router.get('/get-events',
+        eventController.getAll.bind(eventController)
+    )
     return router 
 }
