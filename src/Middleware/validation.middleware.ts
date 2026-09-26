@@ -7,9 +7,12 @@ import { NextFunction, Request, Response } from "express"
 
 
 
-export const validateDto = (DtoClass:any)=>{
+export const validateDto = (DtoClass:any,source: "body" | "query" = "body")=>{
     return async (req:Request,res:Response,next:NextFunction)=>{
-        const dto = plainToInstance(DtoClass,req.body)
+          const data = source === "query"
+            ? req.query
+            : req.body;
+        const dto = plainToInstance(DtoClass,data)
         const errors = await validate(dto)
         if(errors.length>0){
             return res.status(400).json({
@@ -18,7 +21,12 @@ export const validateDto = (DtoClass:any)=>{
                 errors
             })
         }
-        req.body=dto
+        if (source === "body") {
+            req.body = dto;
+}
+        else {
+            (req as any).validatedQuery = dto;
+}
         next()
     }
 }

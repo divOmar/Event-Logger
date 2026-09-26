@@ -1,4 +1,5 @@
 
+import "reflect-metadata";
 import app from "./app";
 import { config } from "./config/env";
 import { connectDataBase } from "./infrastructure/mongodb/database";
