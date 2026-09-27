@@ -4,11 +4,11 @@
 
 
 export interface Event{
-    id:string,
+    _id:string,
     eventType:string,
     source:string,
     payload:Record<string,unknown>
-
+    createdAt:Date
 }
 
 

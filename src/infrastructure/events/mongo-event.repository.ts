@@ -8,8 +8,16 @@ import { EventModel } from "../mongodb/Models/event.model";
 
 
 export class EventMongoRepositery implements EventRepositery{
-    async save(event: CreateEventInput): Promise<void> {
-        await EventModel.create(event)
+    async save(event: CreateEventInput): Promise<Event> {
+      const savedEvent = await EventModel.create(event);
+       
+    return {
+        _id: savedEvent._id.toString(),
+        eventType: savedEvent.eventType,
+        source: savedEvent.source,
+        payload: savedEvent.payload,
+        createdAt: savedEvent.createdAt
+    };
     }
 
         async findAll(
@@ -41,7 +49,7 @@ export class EventMongoRepositery implements EventRepositery{
             const total = await EventModel.countDocuments(query);
 
         const mappedEvents: Event[] = events.map((event) => ({
-    id: event._id.toString(),
+    _id: event._id.toString(),
     eventType: event.eventType,
     source: event.source,
     payload: event.payload,

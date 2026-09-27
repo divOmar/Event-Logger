@@ -15,8 +15,19 @@ const DB_URL=process.env.DB_URL
 if (!DB_URL) {
   throw new Error("DB_URL is required");
 }
+
+const KafkaBrokers= process.env.KAFKA_BROKERS
+if(!KafkaBrokers){
+  throw new Error("Kafka Broker is required")
+}
+const KafkaTopic= process.env.KAFKA_TOPIC
+if(!KafkaTopic){
+  throw new Error("Kafka Broker is required")
+}
 export const config = {
     port,
     node_env,
-    DB_URL
+    DB_URL,
+    KafkaBrokers,
+    KafkaTopic
 }

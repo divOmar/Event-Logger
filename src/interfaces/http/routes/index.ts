@@ -5,12 +5,14 @@ import { EventController } from "../controllers/event.controller";
 import { createEventRoutes } from "./event.routes";
 import { EventMongoRepositery } from "../../../infrastructure/events/mongo-event.repository";
 import { GetEvents } from "../../../Application/events/get-events";
+import { KafkaEventPublisher } from "../../../infrastructure/Kafka/kafka-event.publisher";
 
 const router=Router()
 
 
 const eventRepositry= new EventMongoRepositery()
-const createEvent = new CreateEvent(eventRepositry)
+const eventPublisher= new KafkaEventPublisher()
+const createEvent = new CreateEvent(eventRepositry,eventPublisher)
 const getEvents= new GetEvents(eventRepositry)
 const eventController = new EventController(createEvent,getEvents)
 

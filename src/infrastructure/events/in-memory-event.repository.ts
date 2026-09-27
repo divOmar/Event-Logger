@@ -9,8 +9,9 @@ import { EventFilters, EventPagination, EventResult } from "../../Types/event.ty
 
 export class InMemoryEventRepository  implements EventRepositery{
     private readonly events:Event[]=[]
-    async save(event: Event): Promise<void> {
+    async save(event: Event): Promise<Event> {
         this.events.push(event)
+        return event
     }
  async findAll(
   filters?: EventFilters,
