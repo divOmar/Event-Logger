@@ -5,6 +5,8 @@ import { Event } from "../../Domain/events/event";
 import { plainToInstance } from "class-transformer";
 import { ConsumedEventDto } from "../../Application/events/consumed-event.dto";
 import { validate } from "class-validator";
+import { retry } from "./retry";
+import { DeadLetterPublisher } from "../../Application/events/dead-letter.publisher";
 
 
 
@@ -39,7 +41,7 @@ export const subscribeToEvents = async():Promise<void>=>{
 
 
 
-export const startKafkaConsumer = async (eventConsumer:EventConsumer):Promise<void>=>{
+export const startKafkaConsumer = async (eventConsumer:EventConsumer,deadLetterPublisher:DeadLetterPublisher):Promise<void>=>{
     await consumer.run({
         eachMessage:async ({message})=>{
             if(!message.value){
@@ -69,7 +71,20 @@ export const startKafkaConsumer = async (eventConsumer:EventConsumer):Promise<vo
                 payload: eventDto.payload,
                 createdAt: new Date(eventDto.createdAt)
             };
-                await eventConsumer.consume(event);
+                try {
+                    await retry(
+                    ()=> eventConsumer.consume(event),
+                    3,
+                    1000
+                )
+                } catch (error) {
+                    console.error("Event processing failed after retries", {
+                    event,
+                    error
+                });
+                await deadLetterPublisher.publish(event,error as Error, 3)
+                return
+                }
         }   
     })
 }
