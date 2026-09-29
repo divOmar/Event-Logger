@@ -22,6 +22,12 @@ export const connectKafka=async ():Promise<void>=>{
             console.log("kafka connectted successfuly");
 }
 
+export const disconnectKafka = async ():Promise<void>=>{
+    await producer.disconnect()
+    console.log("kafka diconnected");
+    
+}
+
 
 export class KafkaEventPublisher implements EventPublisher{
     async publish(event: Event): Promise<void> {

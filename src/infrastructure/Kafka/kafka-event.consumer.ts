@@ -31,6 +31,12 @@ export const connectKafkaConsumer = async():Promise<void>=>{
 }
 
 
+export const disconnectKafkaConsumer = async():Promise<void>=>{
+    await consumer.disconnect()
+    console.log("kafka consumer disconnected")
+}
+
+
 export const subscribeToEvents = async():Promise<void>=>{
     await consumer.subscribe({
         topic:config.KafkaTopic,
@@ -88,6 +94,10 @@ export const startKafkaConsumer = async (eventConsumer:EventConsumer,deadLetterP
         }   
     })
 }
+
+
+
+
 
 
 

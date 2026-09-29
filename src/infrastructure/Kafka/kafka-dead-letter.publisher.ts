@@ -27,6 +27,11 @@ export const connectDeadLetterKafka = async():Promise<void>=>{
 }
 
 
+export const disconnectDeadLetterKafka = async (): Promise<void> => {
+    await producer.disconnect();
+    console.log("Kafka DLT producer disconnected");
+};
+
 export class KafkaDeadLetterPublisher implements DeadLetterPublisher {
     async publish(event: Event, error: Error, retryCount: number): Promise<void> {
         const deletedLetterMessge={
