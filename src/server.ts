@@ -7,13 +7,15 @@ import { connectKafka } from "./infrastructure/Kafka/kafka-event.publisher";
 import { connectKafkaConsumer, startKafkaConsumer, subscribeToEvents } from "./infrastructure/Kafka/kafka-event.consumer";
 import { ProccessEvent } from "./Application/events/process-event";
 import { connectDeadLetterKafka, KafkaDeadLetterPublisher } from "./infrastructure/Kafka/kafka-dead-letter.publisher";
+import { MongoProccessedEventRepositry } from "./infrastructure/events/mongo-processed-event.repository";
 
 
 
 
 
 const startServer= async ():Promise<void>=>{
-        const eventConsumer= new ProccessEvent()
+        const processedEventRepositry = new MongoProccessedEventRepositry()
+        const eventConsumer= new ProccessEvent(processedEventRepositry)
         const deadLetterPublisher = new KafkaDeadLetterPublisher()
         await connectDataBase()
         await connectKafka()
