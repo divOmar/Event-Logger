@@ -29,3 +29,18 @@ export interface EventResult {
 export interface ValidatedRequest<T> extends Request {
     validatedQuery: T;
 }
+
+
+
+
+
+
+
+
+
+  export enum EventProcessingStatus {
+  RECEIVED = "RECEIVED",
+  PROCESSING = "PROCESSING",
+  PROCESSED = "PROCESSED",
+  FAILED = "FAILED"
+}

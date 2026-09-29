@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { EventProcessingStatus } from "../../../Types/event.types";
 
 
 
@@ -9,10 +10,19 @@ const ProcessedEventSchema = new Schema({
         uniqe:true,
         index:true
     },
-    proccessedAt:{
-        type:Date,
-        default:Date.now()
+    status:{
+        type:String,
+        enum:Object.values(EventProcessingStatus),
+        required:true
     },
+    processedAt:{
+        type:Date,
+        default:null
+    },
+    error:{
+        type:String,
+        default:null
+    }
 
 },
 {

@@ -18,7 +18,13 @@ export class ProccessEvent implements EventConsumer {
             return
         }
         
-        console.log("Processing event:", event);
-        await this.processedEventRepositry.marksAsProcessed(event._id)
+        await this.processedEventRepositry.markAsProcessing(event._id)
+        try {
+            console.log("Processing event:", event);
+            await this.processedEventRepositry.marksAsProcessed(event._id)
+        } catch (error) {
+            await this.processedEventRepositry.markAsFailed(event._id,error instanceof Error ?error.message:"unKnown Error")
+            throw error
+        }
 }
 }
