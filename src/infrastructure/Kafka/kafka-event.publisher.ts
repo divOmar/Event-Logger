@@ -10,7 +10,12 @@ import { config } from "../../config/env";
 
 const kafka = new Kafka({
     clientId:"event-log-service",
-    brokers:[config.KafkaBrokers]
+    brokers:[config.KafkaBrokers],
+    retry:{
+        initialRetryTime:300,
+        retries:5,
+        maxRetryTime:5000
+    }
 })
 
 
