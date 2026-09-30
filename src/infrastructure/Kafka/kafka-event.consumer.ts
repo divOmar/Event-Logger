@@ -7,6 +7,7 @@ import { ConsumedEventDto } from "../../Application/events/consumed-event.dto";
 import { validate } from "class-validator";
 import { retry } from "./retry";
 import { DeadLetterPublisher } from "../../Application/events/dead-letter.publisher";
+import { logger } from "../logging/logger";
 
 
 
@@ -26,14 +27,14 @@ const consumer = kafka.consumer({
 
 export const connectKafkaConsumer = async():Promise<void>=>{
     await consumer.connect()
-    console.log("kafka consumer connect successfuly");
+    logger.info("kafka consumer connect successfuly");
     
 }
 
 
 export const disconnectKafkaConsumer = async():Promise<void>=>{
     await consumer.disconnect()
-    console.log("kafka consumer disconnected")
+    logger.info("kafka consumer disconnected")
 }
 
 
@@ -58,7 +59,7 @@ export const startKafkaConsumer = async (eventConsumer:EventConsumer,deadLetterP
             try {
             parsedMessage = JSON.parse(message.value.toString());
             } catch (error) {
-            console.error("Invalid JSON Kafka message", error);
+            logger.error({error},"Invalid JSON Kafka message");
             return;
             }
             const eventDto =plainToInstance(
@@ -67,7 +68,7 @@ export const startKafkaConsumer = async (eventConsumer:EventConsumer,deadLetterP
             )
             const errors = await validate(eventDto)
             if(errors.length>0){
-                console.error("invalid kafka Event",errors)
+                logger.error({errors},"invalid kafka Event")
                 return
             }     
             const event: Event = {
@@ -84,10 +85,14 @@ export const startKafkaConsumer = async (eventConsumer:EventConsumer,deadLetterP
                     1000
                 )
                 } catch (error) {
-                    console.error("Event processing failed after retries", {
-                    event,
-                    error
-                });
+                    logger.error({
+                        eventId: event._id,
+                        eventType: event.eventType,
+                        source: event.source,
+                        error
+                        },
+                        "event processing failed after retries"
+                        );
                 await deadLetterPublisher.publish(event,error as Error, 3)
                 return
                 }

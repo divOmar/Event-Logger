@@ -2,6 +2,7 @@ import { Kafka } from "kafkajs";
 import { EventPublisher } from "../../Application/events/event.publisher";
 import { Event } from "../../Domain/events/event";
 import { config } from "../../config/env";
+import { logger } from "../logging/logger";
 
 
 
@@ -24,12 +25,12 @@ const producer = kafka.producer()
 
 export const connectKafka=async ():Promise<void>=>{
             await producer.connect()
-            console.log("kafka connectted successfuly");
+            logger.info("kafka connectted successfuly");
 }
 
 export const disconnectKafka = async ():Promise<void>=>{
     await producer.disconnect()
-    console.log("kafka diconnected");
+    logger.info("kafka diconnected");
     
 }
 

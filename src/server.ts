@@ -8,6 +8,7 @@ import { connectKafkaConsumer, disconnectKafkaConsumer, startKafkaConsumer, subs
 import { ProccessEvent } from "./Application/events/process-event";
 import { connectDeadLetterKafka, disconnectDeadLetterKafka, KafkaDeadLetterPublisher } from "./infrastructure/Kafka/kafka-dead-letter.publisher";
 import { MongoProccessedEventRepositry } from "./infrastructure/events/mongo-processed-event.repository";
+import { logger } from "./infrastructure/logging/logger";
 
 
 
@@ -24,7 +25,7 @@ const startServer= async ():Promise<void>=>{
         await subscribeToEvents()
         startKafkaConsumer(eventConsumer,deadLetterPublisher)
         server =app.listen(config.port,()=>{
-        console.log(`app is running on port ${config.port}`);
+        logger.info(`app is running on port ${config.port}`);
 })
 
 }
@@ -33,7 +34,7 @@ const startServer= async ():Promise<void>=>{
 
 const closeHttpServer = async (): Promise<void> => {
   if (!server) return;
-        console.log("closing http server ");
+        logger.info("closing http server ");
         
   await new Promise<void>((resolve, reject) => {
     server.close((error) => {
@@ -46,7 +47,7 @@ const closeHttpServer = async (): Promise<void> => {
     });
   });
 
-  console.log("HTTP server closed");
+  logger.info("HTTP server closed");
 };
 
 
@@ -65,28 +66,28 @@ const closeHttpServer = async (): Promise<void> => {
 
 
 const shutdown = async (signal: string): Promise<void> => {
-  console.log(`${signal} received. Starting graceful shutdown...`);
+  logger.info(`${signal} received. Starting graceful shutdown...`);
 
   try {
-    console.log("1. Closing HTTP server...");
+    logger.info("1. Closing HTTP server...");
     await closeHttpServer();
 
-    console.log("2. Disconnecting Kafka consumer...");
+    logger.info("2. Disconnecting Kafka consumer...");
     await disconnectKafkaConsumer();
 
-    console.log("3. Disconnecting Kafka producer...");
+    logger.info("3. Disconnecting Kafka producer...");
     await disconnectKafka();
 
-    console.log("4. Disconnecting DLT producer...");
+    logger.info("4. Disconnecting DLT producer...");
     await disconnectDeadLetterKafka();
 
-    console.log("5. Disconnecting MongoDB...");
+    logger.info("5. Disconnecting MongoDB...");
     await disconnectDataBase();
 
-    console.log("Graceful shutdown completed");
+    logger.info("Graceful shutdown completed");
     process.exit(0);
   } catch (error) {
-    console.error("Error during graceful shutdown:", error);
+    logger.error({error},"Error during graceful shutdown:");
     process.exit(1);
   }
 };

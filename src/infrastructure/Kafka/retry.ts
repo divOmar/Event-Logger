@@ -1,3 +1,4 @@
+import { logger } from "../logging/logger"
 
 
 
@@ -17,7 +18,7 @@ export const retry = async(
                 if(atempts>retries){
                     throw error
                 }
-                console.error(`operation failed retried....${atempts}/${retries} `)
+                logger.error(`operation failed retried....${atempts}/${retries} `)
                 await new Promise((resolve)=>{
                     setTimeout(resolve,delayMs)
                 })

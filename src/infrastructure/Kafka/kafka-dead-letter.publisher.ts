@@ -2,6 +2,7 @@ import { Kafka } from "kafkajs";
 import { config } from "../../config/env";
 import { DeadLetterPublisher } from "../../Application/events/dead-letter.publisher";
 import { Event } from "../../Domain/events/event";
+import { logger } from "../logging/logger";
 
 
 
@@ -22,14 +23,14 @@ const producer = kafka.producer()
 
 export const connectDeadLetterKafka = async():Promise<void>=>{
     await producer.connect()
-    console.log("kafka Dlt is connected ");
+    logger.info("kafka Dlt is connected ");
     
 }
 
 
 export const disconnectDeadLetterKafka = async (): Promise<void> => {
     await producer.disconnect();
-    console.log("Kafka DLT producer disconnected");
+    logger.info("Kafka DLT producer disconnected");
 };
 
 export class KafkaDeadLetterPublisher implements DeadLetterPublisher {
