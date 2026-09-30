@@ -6,6 +6,7 @@ import { createEventRoutes } from "./event.routes";
 import { EventMongoRepositery } from "../../../infrastructure/events/mongo-event.repository";
 import { GetEvents } from "../../../Application/events/get-events";
 import { KafkaEventPublisher } from "../../../infrastructure/Kafka/kafka-event.publisher";
+import { healthCheack } from "../controllers/health.controller";
 
 const router=Router()
 
@@ -17,6 +18,11 @@ const getEvents= new GetEvents(eventRepositry)
 const eventController = new EventController(createEvent,getEvents)
 
 router.use(createEventRoutes(eventController))
+
+
+
+router.get("/health",healthCheack)
+
 
 
 export default router
