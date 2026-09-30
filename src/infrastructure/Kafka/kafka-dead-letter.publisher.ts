@@ -13,7 +13,7 @@ import { logger } from "../logging/logger";
 
 const kafka = new Kafka({
     clientId:"event-log-service-dlt",
-    brokers:[config.KafkaBrokers]
+    brokers:config.KafkaBrokers
 })
 
 

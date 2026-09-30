@@ -32,10 +32,21 @@ const KafkaTopic= process.env.KAFKA_TOPIC
 if(!KafkaTopic){
   throw new Error("Kafka topic is required")
 }
+
+
+const kafkaBrokers = KafkaBrokers
+  .split(",")
+  .map((broker) => broker.trim())
+  .filter(Boolean);
+
+if (kafkaBrokers.length === 0) {
+  throw new Error("At least one Kafka broker is required");
+}
+
 export const config = {
     port,
     node_env,
     DB_URL,
-    KafkaBrokers,
+    KafkaBrokers:kafkaBrokers,
     KafkaTopic
 }

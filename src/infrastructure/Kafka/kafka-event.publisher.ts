@@ -11,7 +11,7 @@ import { logger } from "../logging/logger";
 
 const kafka = new Kafka({
     clientId:"event-log-service",
-    brokers:[config.KafkaBrokers],
+    brokers:config.KafkaBrokers,
     retry:{
         initialRetryTime:300,
         retries:5,

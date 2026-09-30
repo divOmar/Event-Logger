@@ -17,7 +17,7 @@ import { logger } from "../logging/logger";
 
 const kafka = new Kafka({
     clientId:"event-log-service-consumer",
-    brokers:[config.KafkaBrokers]
+    brokers:config.KafkaBrokers
 })
 
 const consumer = kafka.consumer({
