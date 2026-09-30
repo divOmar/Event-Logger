@@ -9,10 +9,6 @@ const app = express()
 app.use(express.json())
 
 app.use(routes)
-app.get("/health",(req,res)=>{
-    res.status(200).json({status:"ok",service:"event log service"})
-})
-
 
 app.use(errorMiddleware)
 
