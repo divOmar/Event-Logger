@@ -31,9 +31,13 @@ export class MongoProccessedEventRepositry implements ProcessedEventRepositery{
                 status:EventProcessingStatus.PROCESSING,
                 error:null,
                 processedAt:null
+            },{
+                upsert:true,
+                new:true
             }
         )
     }
+
     async markAsFailed(eventId: string,error:string): Promise<void> {
         await ProcessedEventModel.findOneAndUpdate(
             {eventId},

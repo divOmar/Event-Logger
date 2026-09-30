@@ -1,4 +1,12 @@
 services:
+  mongodb:
+    image: mongo:8.0
+    container_name: event-log-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
   kafka:
     image: apache/kafka:4.0.0
     container_name: event-log-kafka
@@ -9,7 +17,7 @@ services:
       KAFKA_PROCESS_ROLES: broker,controller
 
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
 
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
@@ -21,3 +29,21 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
 
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  app:
+    build: .
+    container_name: event-log-service
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: ${PORT}
+      NODE_ENV: ${NODE_ENV}
+      DB_URL: ${DB_URL}
+      KAFKA_BROKERS: ${KAFKA_BROKERS}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+    depends_on:
+      - mongodb
+      - kafka
+
+volumes:
+  mongodb_data:
