@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: event-log-service
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: event-log-service
+
+  template:
+    metadata:
+      labels:
+        app: event-log-service
+
+    spec:
+      containers:
+        - name: event-log-service
+
+          image: event-log-service:latest
+          imagePullPolicy: Never 
+          ports:
+            - containerPort: 3000
+
+          env:
+            - name: PORT
+              value: "3000"
+
+            - name: NODE_ENV
+              value: "production"
+
+            - name: DB_URL
+              value: "mongodb://mongodb:27017/event-log-service"
+
+            - name: KAFKA_BROKERS
+              value: "kafka:9092"
+
+            - name: KAFKA_TOPIC
+              value: "events"
+
+            - name: KAFKA_DLT_TOPIC
+              value: "events.dlt"
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
