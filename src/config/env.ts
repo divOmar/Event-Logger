@@ -32,7 +32,11 @@ const KafkaTopic= process.env.KAFKA_TOPIC
 if(!KafkaTopic){
   throw new Error("Kafka topic is required")
 }
+const KafkaDltTopic = process.env.KAFKA_DLT_TOPIC
 
+if(!KafkaDltTopic){
+    throw new Error("Kafka DLT topic is required")
+}
 
 const kafkaBrokers = KafkaBrokers
   .split(",")
@@ -48,5 +52,6 @@ export const config = {
     node_env,
     DB_URL,
     KafkaBrokers:kafkaBrokers,
-    KafkaTopic
+    KafkaTopic,
+    KafkaDltTopic
 }

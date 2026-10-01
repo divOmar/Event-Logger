@@ -18,7 +18,14 @@ export const retry = async(
                 if(atempts>retries){
                     throw error
                 }
-                logger.error(`operation failed retried....${atempts}/${retries} `)
+                logger.error(
+            {
+                attempt: atempts,
+                maxRetries: retries,
+                delayMs
+            },
+                "Kafka operation failed, retrying"
+            );
                 await new Promise((resolve)=>{
                     setTimeout(resolve,delayMs)
                 })

@@ -41,6 +41,7 @@ services:
       DB_URL: ${DB_URL}
       KAFKA_BROKERS: ${KAFKA_BROKERS}
       KAFKA_TOPIC: ${KAFKA_TOPIC}
+      KAFKA_DLT_TOPIC: ${KAFKA_DLT_TOPIC}
     depends_on:
       - mongodb
       - kafka

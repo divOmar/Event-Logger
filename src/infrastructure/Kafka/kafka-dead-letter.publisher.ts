@@ -10,12 +10,15 @@ import { logger } from "../logging/logger";
 
 
 
-
 const kafka = new Kafka({
-    clientId:"event-log-service-dlt",
-    brokers:config.KafkaBrokers
-})
-
+    clientId: "event-log-service-dlt",
+    brokers: config.KafkaBrokers,
+    retry: {
+        initialRetryTime: 300,
+        retries: 5,
+        maxRetryTime: 3000
+    }
+});
 
 const producer = kafka.producer()
 
@@ -44,7 +47,7 @@ export class KafkaDeadLetterPublisher implements DeadLetterPublisher {
             failedAt:new Date().toString()
         }
         await producer.send({
-            topic:"events.dlt",
+            topic:config.KafkaDltTopic,
             messages:[{
                 key:event._id,
                 value:JSON.stringify(deletedLetterMessge)
