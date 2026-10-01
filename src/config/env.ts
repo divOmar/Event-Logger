@@ -18,21 +18,21 @@ if (
     "NODE_ENV must be development, production, or test"
   );
 }
-const DB_URL=process.env.DB_URL
+const DB_URL = process.env.DB_URL?.trim();
 
 if (!DB_URL) {
   throw new Error("DB_URL is required");
 }
 
-const KafkaBrokers= process.env.KAFKA_BROKERS
+const KafkaBrokers = process.env.KAFKA_BROKERS?.trim();
 if(!KafkaBrokers){
   throw new Error("Kafka Broker is required")
 }
-const KafkaTopic= process.env.KAFKA_TOPIC
+const KafkaTopic = process.env.KAFKA_TOPIC?.trim();
 if(!KafkaTopic){
   throw new Error("Kafka topic is required")
 }
-const KafkaDltTopic = process.env.KAFKA_DLT_TOPIC
+const KafkaDltTopic = process.env.KAFKA_DLT_TOPIC?.trim();
 
 if(!KafkaDltTopic){
     throw new Error("Kafka DLT topic is required")
